@@ -96,6 +96,16 @@ def simulate(E, P, d, n_bounces):
     return np.array(points), np.array(dirs)
 
 
+def phase_coords(E, points, dirs):
+    """Birkhoff phase-space coordinates of each bounce: the eccentric angle phi
+    of the bounce point, and p = cos(angle between the outgoing direction and
+    the counterclockwise tangent)."""
+    phi = np.mod(np.arctan2(points[:, 1] / E.b, points[:, 0] / E.a), 2 * np.pi)
+    n = np.array([E.normal(P) for P in points])
+    tangents = np.column_stack([-n[:, 1], n[:, 0]])
+    return phi, np.sum(dirs * tangents, axis=1)
+
+
 def winding(E, points):
     """Total turning of the bounce points around the centre, in units of 2*pi
     (using the eccentric angle, so equal steps on a circle stay equal)."""

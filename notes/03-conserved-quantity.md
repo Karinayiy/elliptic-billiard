@@ -1,57 +1,76 @@
-# 03 — The conserved quantity d₁d₂
+# 03 · The conserved quantity $d_1 d_2$
 
-## Gaokao 二级结论: d₁d₂ = b² for a tangent line
+> **Gaokao starting point.** Two standard 二级结论 for $x^2/a^2 + y^2/b^2 = 1$:
+> the tangent at $(x_0, y_0)$ is $x_0x/a^2 + y_0y/b^2 = 1$, and the distances
+> $d_1, d_2$ from the foci to any tangent line satisfy $d_1 d_2 = b^2$.
 
-For the ellipse x²/a² + y²/b² = 1 with foci F₁(−c, 0), F₂(c, 0), let d₁, d₂ be the
-distances from F₁, F₂ to any tangent line. Then **d₁d₂ = b²**.
+Foci: $F_{1,2} = (\mp c, 0)$ with $c^2 = a^2 - b^2$.
 
-**Proof.** The tangent at (x₀, y₀) is x₀x/a² + y₀y/b² = 1 (another 二级结论).
-Using the point-to-line distance formula,
+## 1. The 二级结论 $d_1 d_2 = b^2$
 
-    d₁d₂ = |−cx₀/a² − 1| · |cx₀/a² − 1| / (x₀²/a⁴ + y₀²/b⁴)
-         = (1 − c²x₀²/a⁴) / (x₀²/a⁴ + y₀²/b⁴).
+**Lemma 1.** For every tangent line of $C$, $d_1 d_2 = b^2$.
 
-Substitute y₀² = b²(1 − x₀²/a²) into the denominator:
+*Proof.* At the point of tangency $(x_0, y_0)$, the tangent line is
+$\frac{x_0}{a^2}x + \frac{y_0}{b^2}y - 1 = 0$. By the point-to-line distance formula,
 
-    x₀²/a⁴ + 1/b² − x₀²/(a²b²) = 1/b² − x₀²(a² − b²)/(a⁴b²)
-                               = (1/b²)(1 − c²x₀²/a⁴).
+```math
+d_1 d_2
+= \frac{\left|-\frac{c x_0}{a^2} - 1\right|\cdot\left|\frac{c x_0}{a^2} - 1\right|}
+       {\frac{x_0^2}{a^4} + \frac{y_0^2}{b^4}}
+= \frac{1 - \frac{c^2 x_0^2}{a^4}}{\frac{x_0^2}{a^4} + \frac{y_0^2}{b^4}} .
+```
 
-So d₁d₂ = b². ∎
+Substitute $y_0^2 = b^2\left(1 - x_0^2/a^2\right)$ in the denominator:
 
-## Why this is conserved in the billiard
+```math
+\frac{x_0^2}{a^4} + \frac{1}{b^2} - \frac{x_0^2}{a^2 b^2}
+= \frac{1}{b^2} - \frac{(a^2 - b^2)\,x_0^2}{a^4 b^2}
+= \frac{1}{b^2}\Bigl(1 - \frac{c^2 x_0^2}{a^4}\Bigr).
+```
 
-By the caustic theorem (note 02), every segment is tangent to the same confocal
-ellipse x²/a′² + y²/b′² = 1 with the same foci F₁, F₂. Apply the 二级结论 to *that*
-ellipse: for every segment,
+Hence $d_1 d_2 = b^2$. (The numerator is positive since $|x_0| \le a$ and $c < a$.) $\blacksquare$
 
-    d₁d₂ = b′² = a′² − c².
+## 2. Why it is conserved
 
-That is the same number for every segment. **d₁d₂ is a conserved quantity of the
-motion**, and its value tells you which caustic the orbit has.
+By the caustic theorem ([note 02](02-caustic-theorem.md)), every segment of an
+orbit is tangent to one fixed confocal ellipse $x^2/a'^2 + y^2/b'^2 = 1$ with
+the same foci. Apply Lemma 1 to that ellipse:
 
-## Signed version (covers the hyperbola case too)
+```math
+d_1 d_2 = b'^2 = a'^2 - c^2 \quad\text{for every segment.}
+```
+
+**So $d_1 d_2$ is constant along the orbit**, and its value identifies the caustic.
+
+## 3. Signed version: one formula for both cases
 
 Write the confocal family as
 
-    x²/(a² − λ) + y²/(b² − λ) = 1.
+```math
+\mathcal C_\lambda:\quad \frac{x^2}{a^2 - \lambda} + \frac{y^2}{b^2 - \lambda} = 1 ,
+```
 
-For 0 < λ < b² this is an ellipse, and for b² < λ < a² it is a hyperbola. Use
-*signed* distances (positive on one side of the line, negative on the other).
-Then for every segment
+an ellipse for $0 < \lambda < b^2$ and a hyperbola for $b^2 < \lambda < a^2$.
+Measure $d_1, d_2$ as **signed** distances, positive on one side of the line
+and negative on the other. Then for every segment
 
-    d₁d₂ = b² − λ.
+```math
+\boxed{\; d_1 d_2 = b^2 - \lambda \;}
+```
 
-It is positive when the foci are on the same side (ellipse caustic) and negative
-when the segment passes between them (hyperbola caustic). The simulator checks
-this numerically for both cases, and also checks directly that each segment is
-tangent to the conic with λ = b² − d₁d₂.
+The product is positive when both foci are on the same side of the segment
+(ellipse caustic) and negative when the segment passes between them
+(hyperbola caustic).
 
-Example: the warm-up orbit from (√2, 1) in direction (−1, −1) crosses the
-x-axis at x = √2 − 1, between the foci (±√2), so its caustic is a hyperbola.
-The simulator gives d₁d₂ = 1/2 − √2 ≈ −0.914 on every segment.
+**Example.** The warm-up orbit from $(\sqrt2, 1)$ with direction $(-1,-1)$ crosses
+the $x$-axis at $x = \sqrt2 - 1$, which lies between the foci $\pm\sqrt2$. So its
+caustic is a hyperbola, and the simulator gives $d_1 d_2 = \tfrac12 - \sqrt2 \approx -0.914$
+on all 2000 segments, constant to about $10^{-13}$.
 
-## Still to do myself
+## To do myself
 
-- [ ] Prove the hyperbola version of the 二级结论 (signed product = −b″²
-      for a hyperbola x²/a″² − y²/b″² = 1).
-- [ ] Derive d₁d₂ = b² − λ from the two 二级结论 above.
+- [ ] Prove the hyperbola version of Lemma 1 (signed product $= -b''^2$ for
+      $x^2/a''^2 - y^2/b''^2 = 1$).
+- [ ] Derive $d_1 d_2 = b^2 - \lambda$. Hint: a line $\boldsymbol\nu\cdot\mathbf x = h$
+      with $|\boldsymbol\nu| = 1$ is tangent to $x^2/P + y^2/Q = 1$ exactly when
+      $P\nu_x^2 + Q\nu_y^2 = h^2$.

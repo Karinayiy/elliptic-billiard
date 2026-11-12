@@ -1,104 +1,107 @@
-"""Numerical checks of notes 01-03 and the Poncelet porism. Saves figures to figures/."""
-import os
+"""Numerical checks of every claim in notes/01-03. Run: .venv/bin/python verify.py
 
-import matplotlib.pyplot as plt
+Each check prints PASS or FAIL; the script exits with an error if any check fails.
+"""
+import sys
+
 import numpy as np
 
 from billiards import Ellipse, periodic_caustic, simulate
 
 E = Ellipse(2.0, np.sqrt(2.0))  # x^2/4 + y^2/2 = 1, 2025 National Paper II Q16
-os.makedirs("figures", exist_ok=True)
+TOL = 1e-10
+failures = []
 
 
-def check_warmup():
-    print("1. Warm-up (notes/01)")
-    P, d = np.array([np.sqrt(2), 1.0]), np.array([-1.0, -1.0])
-    Q = E.next_bounce(P, d)
-    exact = np.array([(np.sqrt(2) - 4) / 3, -(1 + 2 * np.sqrt(2)) / 3])
-    print(f"   Q = {Q}, exact = {exact}, error = {np.abs(Q - exact).max():.1e}")
+def check(name, error, tol=TOL):
+    ok = error < tol
+    print(f"  [{'PASS' if ok else 'FAIL'}] {name}: {error:.1e}")
+    if not ok:
+        failures.append(name)
 
 
-def check_conserved(name, d0, n_bounces=2000):
-    P0 = np.array([np.sqrt(2), 1.0])
-    points, dirs = simulate(E, P0, d0, n_bounces)
-    prods = np.array([E.focal_product(P, d) for P, d in zip(points[:-1], dirs[:-1])])
+def mirror(X, P, d):
+    d = d / np.linalg.norm(d)
+    v = X - P
+    return P + 2 * np.dot(v, d) * d - v
+
+
+def side(X, P, d):
+    return np.sign(d[0] * (X[1] - P[1]) - d[1] * (X[0] - P[0]))
+
+
+def angle(u, v):
+    return np.arccos(np.clip(np.dot(u, v) / np.linalg.norm(u) / np.linalg.norm(v), -1, 1))
+
+
+print("Note 01: next bounce")
+P, d = np.array([np.sqrt(2), 1.0]), np.array([-1.0, -1.0])
+Q = E.next_bounce(P, d)
+check("Q matches ((√2-4)/3, -(1+2√2)/3)",
+      np.abs(Q - [(np.sqrt(2) - 4) / 3, -(1 + 2 * np.sqrt(2)) / 3]).max())
+try:
+    E.next_bounce(np.array([E.a, 0.0]), np.array([0.0, 1.0]))
+    check("tangent direction is refused", 1.0)
+except ValueError:
+    check("tangent direction is refused", 0.0)
+
+print("Note 02: caustic theorem, every step of the proof on random orbits")
+rng = np.random.default_rng(0)
+gap = ang_err = 0.0
+switches = outside = 0
+for _ in range(300):
+    phi, th = rng.uniform(0, 2 * np.pi), rng.uniform(0.05, np.pi - 0.05)
+    P = np.array([E.a * np.cos(phi), E.b * np.sin(phi)])
+    n = E.normal(P)
+    points, _ = simulate(E, P, np.cos(th) * np.array([-n[1], n[0]]) - np.sin(th) * n, 6)
+    F1, F2 = E.foci
+    for A, B, C in zip(points[:-2], points[1:-1], points[2:]):
+        sep_ab = side(F1, A, B - A) != side(F2, A, B - A)
+        sep_bc = side(F1, B, C - B) != side(F2, B, C - B)
+        switches += sep_ab != sep_bc
+        if sep_ab:
+            continue
+        F1p, F2p = mirror(F1, A, B - A), mirror(F2, B, C - B)
+        s, _ = np.linalg.solve(np.column_stack([B - A, F1p - F2]), F1p - A)
+        outside += not (0 < s < 1)
+        gap = max(gap, abs(np.linalg.norm(F2 - F1p) - np.linalg.norm(F2p - F1)))
+        ang_err = max(ang_err,
+                      abs(angle(F1p - B, F2 - B) - angle(A - B, F1 - B) - angle(A - B, F2 - B)),
+                      abs(angle(F1 - B, F2p - B) - angle(C - B, F1 - B) - angle(C - B, F2 - B)))
+check("Lemma 2: tangency point strictly inside the chord (violations)", outside, 0.5)
+check("Lemma 3: separation never switches (violations)", switches, 0.5)
+check("angle identities in step 3", ang_err)
+check("|F1'F2| = |F1F2'|", gap)
+
+print("Note 03: d1d2 conserved and equal to b^2 - lambda, 5000 bounces")
+for d, kind in [((-1.0, -0.3), "ellipse"), ((-1.0, -1.0), "hyperbola")]:
+    points, dirs = simulate(E, [np.sqrt(2), 1.0], d, 5000)
+    prods = np.array([E.focal_product(P, v) for P, v in zip(points, dirs)])
     lam = E.b**2 - prods[0]
-    resid = np.array([E.caustic_residual(P, d, lam) for P, d in zip(points[:-1], dirs[:-1])])
-    kind = "ellipse" if prods[0] > 0 else "hyperbola"
-    print(f"   {name}: d1d2 = {prods[0]:.12f}, spread over {n_bounces} bounces = "
-          f"{prods.max() - prods.min():.1e}")
-    print(f"      caustic: {kind}, lambda = {lam:.6f}, max tangency residual = "
-          f"{np.abs(resid).max():.1e}")
-    return points, lam
+    resid = max(abs(E.caustic_residual(P, v, lam)) for P, v in zip(points, dirs))
+    check(f"{kind} caustic: spread of d1d2", np.ptp(prods))
+    check(f"{kind} caustic: every segment tangent to lambda = {lam:.4f}", resid)
+check("warm-up orbit has d1d2 = 1/2 - √2",
+      abs(E.focal_product(np.array([np.sqrt(2), 1.0]), np.array([-1.0, -1.0])) - (0.5 - np.sqrt(2))))
 
-
-def plot_orbit(ax, points, lam, title):
-    t = np.linspace(0, 2 * np.pi, 400)
-    ax.plot(E.a * np.cos(t), E.b * np.sin(t), "k", lw=1.5)
-    ax.plot(points[:, 0], points[:, 1], lw=0.3, alpha=0.6)
-    if lam < E.b**2:
-        A, B = np.sqrt(E.a**2 - lam), np.sqrt(E.b**2 - lam)
-        ax.plot(A * np.cos(t), B * np.sin(t), "r", lw=1.2, label="caustic")
-    else:
-        A, B = np.sqrt(E.a**2 - lam), np.sqrt(lam - E.b**2)
-        s = np.linspace(-1.5, 1.5, 200)
-        for sx in (1, -1):
-            ax.plot(sx * A * np.cosh(s), B * np.sinh(s), "r", lw=1.2)
-    ax.plot(*E.foci.T, "k.", ms=6)
-    ax.set_xlim(-2.2, 2.2)
-    ax.set_ylim(-1.6, 1.6)
-    ax.set_aspect("equal")
-    ax.set_title(title)
-
-
-def check_poncelet(m, n, n_starts=12):
-    lam = periodic_caustic(E, m, n)
-    closes, perims = [], []
-    for phi in np.linspace(0, 2 * np.pi, n_starts, endpoint=False):
-        P, d = E.launch_on_caustic(lam, phi)
-        points, _ = simulate(E, P, d, n)
-        closes.append(np.linalg.norm(points[-1] - points[0]))
+print("Poncelet porism: closing from every start, equal perimeters")
+for m, k in [(1, 3), (1, 4), (2, 7), (1, 5)]:
+    lam = periodic_caustic(E, m, k)
+    gaps, perims = [], []
+    for phi in np.linspace(0, 2 * np.pi, 24, endpoint=False):
+        points, _ = simulate(E, *E.launch_on_caustic(lam, phi), k)
+        gaps.append(np.linalg.norm(points[-1] - points[0]))
         perims.append(np.sum(np.linalg.norm(np.diff(points, axis=0), axis=1)))
-    perims = np.array(perims)
-    print(f"   rotation {m}/{n}: lambda = {lam:.10f}, max closing gap = "
-          f"{max(closes):.1e}, perimeter = {perims.mean():.10f} "
-          f"(spread {perims.max() - perims.min():.1e})")
-    return lam
+    check(f"rotation {m}/{k}: closing gap", max(gaps))
+    check(f"rotation {m}/{k}: perimeter spread (perimeter {np.mean(perims):.9f})", np.ptp(perims))
+lam = periodic_caustic(E, 1, 4)
+P, d = E.launch_on_caustic(lam, 0.0)
+points, _ = simulate(E, P, d, 4)
+check("rotation 1/4 perimeter = 4√(a²+b²) (rhombus through the vertices)",
+      abs(np.sum(np.linalg.norm(np.diff(points, axis=0), axis=1)) - 4 * np.sqrt(E.a**2 + E.b**2)))
 
-
-def plot_poncelet(ax, m, n, lam, n_starts=5):
-    t = np.linspace(0, 2 * np.pi, 400)
-    ax.plot(E.a * np.cos(t), E.b * np.sin(t), "k", lw=1.5)
-    A, B = np.sqrt(E.a**2 - lam), np.sqrt(E.b**2 - lam)
-    ax.plot(A * np.cos(t), B * np.sin(t), "r", lw=1.2)
-    for phi in np.linspace(0, 2 * np.pi / n, n_starts, endpoint=False):
-        P, d = E.launch_on_caustic(lam, phi)
-        points, _ = simulate(E, P, d, n)
-        ax.plot(points[:, 0], points[:, 1], lw=1)
-    ax.set_aspect("equal")
-    ax.set_title(f"rotation number {m}/{n}")
-    ax.axis("off")
-
-
-if __name__ == "__main__":
-    check_warmup()
-
-    print("2. Conserved d1d2 and the caustic (notes/02, 03)")
-    # the warm-up direction crosses the x-axis at x = √2 - 1, between the foci
-    pts_h, lam_h = check_conserved("start (√2,1), d = (-1,-1)", np.array([-1.0, -1.0]))
-    pts_e, lam_e = check_conserved("start (√2,1), d = (-1,0.3)", np.array([-1.0, 0.3]))
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
-    plot_orbit(axes[0], pts_e[:300], lam_e, "segment misses F1F2: ellipse caustic")
-    plot_orbit(axes[1], pts_h[:300], lam_h, "segment crosses F1F2: hyperbola caustic")
-    fig.tight_layout()
-    fig.savefig("figures/caustics.png", dpi=150)
-
-    print("3. Poncelet porism: every start closes, all perimeters equal")
-    cases = [(1, 3), (1, 4), (1, 5), (2, 5)]
-    lams = [check_poncelet(m, n) for m, n in cases]
-    fig, axes = plt.subplots(1, 4, figsize=(14, 3.5))
-    for ax, (m, n), lam in zip(axes, cases, lams):
-        plot_poncelet(ax, m, n, lam)
-    fig.tight_layout()
-    fig.savefig("figures/poncelet.png", dpi=150)
-    print("Figures saved to figures/")
+print()
+if failures:
+    print(f"{len(failures)} check(s) FAILED")
+    sys.exit(1)
+print("All checks passed.")
