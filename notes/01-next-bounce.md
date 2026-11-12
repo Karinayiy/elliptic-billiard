@@ -31,8 +31,15 @@ P = (x₀, y₀) on C, direction d = (p, q). Substitute (x₀ + pt, y₀ + qt):
 Note: n = (x₀/a², y₀/b²) is a normal vector to C at P, so B = 2(d·n).
 The same n is used for the reflection in step 2.
 
-## Open checks (to answer myself)
+Gaokao link: this is exactly the 联立 + 韦达 step of 2025 National Paper II Q16(2),
+except that one root (t = 0) is already known, so we never need the discriminant.
 
-1. What happens if d·n = 0? What is t, and what does it mean geometrically?
-2. Can A = 0? (The code divides by A.)
-3. Redo the general formula on a blank page without looking.
+## Checks
+
+1. **d·n = 0.** Then B = 0, so t = 0 is a double root: the line touches C only
+   at P. Geometrically d is along the tangent at P (the 判别式 Δ = 0 case of
+   联立). The ball grazes the wall and there is no next bounce. The code must
+   refuse this case instead of returning Q = P.
+2. **A = 0?** A = p²/a² + q²/b² is a sum of squares, so A = 0 only when
+   p = q = 0, which is not a direction. Dividing by A is always safe.
+3. Redo the general formula on a blank page without looking. *(to do myself)*

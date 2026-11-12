@@ -23,12 +23,31 @@ only integrable convex billiard table).
 
 - [x] Warm-up: next bounce point via Vieta's formulas ([notes/01-next-bounce.md](notes/01-next-bounce.md))
 - [ ] Step 0: GeoGebra exploration, conjecture the caustic
-- [ ] Step 1: prove the caustic theorem (optical property, reflection trick, congruent triangles)
-- [ ] Step 2: Python simulator (next bounce, normal, reflection d' = d − 2(d·n)n)
-- [ ] Step 3: verify d₁d₂ conservation, Poncelet porism, equal perimeters of periodic orbits
+- [x] Step 1: prove the caustic theorem, ellipse case ([notes/02-caustic-theorem.md](notes/02-caustic-theorem.md)); hyperbola case still open
+- [x] Step 2: Python simulator ([billiards.py](billiards.py))
+- [x] Step 3: verify d₁d₂ conservation ([notes/03-conserved-quantity.md](notes/03-conserved-quantity.md)), Poncelet porism, equal perimeters ([verify.py](verify.py))
 - [ ] Step 4: deformed tables and the onset of chaos
+
+## Running
+
+    python3 -m venv .venv
+    .venv/bin/pip install -r requirements.txt
+    .venv/bin/python verify.py
+
+## Results so far
+
+On x²/4 + y²/2 = 1, over 2000 bounces d₁d₂ stays constant to about 1e-13, and
+every segment is tangent to the predicted confocal conic to the same accuracy.
+Periodic orbits close from every starting point (Poncelet porism), with equal
+perimeters. For rotation number 1/4 the perimeter is 9.797958… = 4√6 = 4√(a²+b²),
+the perimeter of the rhombus through the four vertices.
+
+![caustics](figures/caustics.png)
+![poncelet](figures/poncelet.png)
 
 ## Layout
 
 - `notes/` — derivations and proofs
+- `billiards.py` — the simulator
+- `verify.py` — numerical checks, writes `figures/`
 - `LOG.md` — work log, including what was done with tutor help
