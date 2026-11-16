@@ -123,10 +123,62 @@ caustic. By induction along the orbit, all segments are. $\blacksquare$
 the angle identities and $|F_1'F_2| = |F_1F_2'|$ all hold, with largest error
 $2.7\times10^{-15}$.
 
+## Proof of the theorem, part 2 (hyperbola caustic)
+
+**Lemma 1′.** Let $\ell$ be a line that separates $F_1, F_2$, passes through
+neither, and does not pass through the centre $O$ (the midpoint of $F_1F_2$). Let $F_1'$ be the
+reflection of $F_1$ in $\ell$. Then the hyperbola with foci $F_1, F_2$ and
+real axis
+
+```math
+2a' = |F_1'F_2|
+```
+
+is tangent to $\ell$.
+
+*Proof.* Now $F_1'$ and $F_2$ are on the same side of $\ell$. For $P \in \ell$,
+
+```math
+\bigl|\,|PF_1| - |PF_2|\,\bigr| = \bigl|\,|PF_1'| - |PF_2|\,\bigr| \;\le\; |F_1'F_2| ,
+```
+
+with equality iff $P$ is on line $F_1'F_2$ but not strictly between $F_1'$ and
+$F_2$. Line $F_1'F_2$ is not parallel to $\ell$ (that happens exactly when $F_1, F_2$
+are equidistant from $\ell$, i.e. when $\ell$ passes through $O$), so there is exactly one such point $P_0$. Every other
+point of $\ell$ satisfies $\bigl||PF_1| - |PF_2|\bigr| < 2a'$, i.e. it lies
+strictly between the two branches. A line that touches the hyperbola once and
+otherwise stays between the branches is tangent to it.
+
+Finally, $2a' < |F_1F_2|$, so this is a genuine hyperbola: by the triangle
+inequality $\bigl||P_0F_1| - |P_0F_2|\bigr| \le |F_1F_2|$, with equality only on
+line $F_1F_2$ outside the segment $F_1F_2$. But $\ell$ meets line $F_1F_2$
+inside that segment. $\blacksquare$
+
+*Proof of part 2.* Let $A, B, C$ be consecutive bounce points with line $AB$
+separating the foci. By Lemma 3, so does $BC$. Define $F_1', F_2'$ as before.
+By Lemma 1′ it suffices to show $|F_1'F_2| = |F_1F_2'|$, and again
+$|BF_1'| = |BF_1|$, $|BF_2| = |BF_2'|$. This time $F_1'$ and $F_2$ are on the
+**same** side of line $AB$, so the angle between them is a difference:
+
+```math
+\angle F_1'BF_2 = \bigl|\angle ABF_2 - \angle ABF_1\bigr|, \qquad
+\angle F_1BF_2' = \bigl|\angle CBF_1 - \angle CBF_2\bigr| .
+```
+
+The mirror $\sigma_B$ gives $\angle ABF_1 = \angle CBF_2$ and
+$\angle ABF_2 = \angle CBF_1$, so the angles are equal, and SAS finishes the
+proof. $\blacksquare$
+
+(A segment through $O$ is parallel to an asymptote of the confocal hyperbola:
+it touches it "at infinity". The theorem still holds for such segments by
+continuity, since $d_1d_2$ is conserved on all nearby orbits (note 03) and
+depends continuously on the segment.)
+
+*Numerical check.* On 510 random bounces with segments between the foci, the
+angle identities and $|F_1'F_2| = |F_1F_2'|$ hold to $8\times10^{-14}$.
+
 ## To do myself
 
-- [ ] Prove part 2 (hyperbola caustic). In Lemma 1, $F_1, F_2$ are now on
-      opposite sides of $\ell$: use $\bigl||PF_1| - |PF_2|\bigr|$ instead of the sum.
 - [ ] Redraw the proof figure by hand or in GeoGebra.
 - [ ] What happens to an orbit through a focus? (Optical property: next it
       passes through the other focus. Where does it end up after many bounces?)

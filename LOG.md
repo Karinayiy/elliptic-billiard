@@ -30,3 +30,15 @@ An honest record of what I did myself and what I got help with.
   all of step 4 (the paper's results section), which is the original
   contribution. Every reference in `paper/refs.bib` must be checked against
   the source before submission.
+
+## 2026-11-15 — Section 4 and the full paper
+
+- I asked Claude to keep going and produce the full paper PDF. Drafted by
+  Claude: the hyperbola case of the caustic theorem, the one-line proof of
+  d₁d₂ = b² − λ, the deformation family u + v + εuv = 1 (Claude's idea), the
+  axis-orbit stability theorem, `deformed.py`, `research.py`, the sweep and
+  its figures, note 04, Section 4, the discussion, the abstract and the AI
+  disclosure in `paper/`. `verify.py` now has 29 checks.
+- Still mine: the literature search on this family, checking every reference,
+  the "To do myself" items in notes 02 and 04, and being able to explain and
+  re-derive every result before showing the paper to anyone.

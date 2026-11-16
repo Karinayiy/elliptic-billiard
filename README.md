@@ -30,7 +30,7 @@ billiard is integrable.
 
 ## Results so far
 
-Every claim in the notes is checked by `verify.py` (21 checks, all passing),
+Every claim in the notes is checked by `verify.py` (29 checks, all passing),
 on $x^2/4 + y^2/2 = 1$:
 
 | Check | max. error |
@@ -48,9 +48,33 @@ on $x^2/4 + y^2/2 = 1$:
 angle. Every orbit stays on a single curve, a level set of $d_1d_2$. The red
 curves are orbits aimed at a focus. They separate the orbits with ellipse
 caustics (top and bottom) from those with hyperbola caustics (the two islands).
-Step 4 asks what happens to this picture when the table is deformed.
-
 <p align="center"><img src="figures/phase.png" width="820" alt="Phase portrait"></p>
+
+## Breaking the ellipse
+
+Deform the gaokao equation itself. With $u = x^2/4$ and $v = y^2/2$, study
+$u + v + \varepsilon uv = 1$. At $\varepsilon = 0$ this is the ellipse, and as
+$\varepsilon \to -1$ it becomes a rectangle; both are integrable. The tables are
+convex exactly for $-1 < \varepsilon < 3$. Substituting a line now gives a
+quartic, and since $t = 0$ is still a root, Vieta's step becomes a cubic
+([note 04](notes/04-deformed-tables.md)).
+
+<p align="center"><img src="figures/deformed_phase.png" width="900" alt="Phase portraits of deformed tables"></p>
+
+**Findings** (3000 orbits × 3000 bounces for each of 32 values of $\varepsilon$):
+
+- **Exact:** the major-axis orbit becomes stable for $\varepsilon < -\tfrac12$,
+  and the minor-axis orbit becomes unstable for $\varepsilon > 1$. For the
+  gaokao ellipse itself the minor-axis orbit is degenerate
+  ($\operatorname{tr} M = -2$), because $a^2 = 2b^2$.
+- **Chaos appears for every $\varepsilon \neq 0$,** starting at the orbits
+  through a focus. The chaotic fraction is $\approx 4.8\,|\varepsilon|^{0.98}$
+  for small $|\varepsilon|$.
+- **$d_1d_2$ breaks linearly.** On regular orbits its range is
+  $\approx 1.8\,|\varepsilon|^{1.00}$, so it survives as an approximate invariant.
+
+<p align="center"><img src="figures/chaos_fraction.png" width="900" alt="Chaotic fraction"></p>
+<p align="center"><img src="figures/d1d2_breaking.png" width="900" alt="Breaking of d1d2"></p>
 
 <p align="center"><img src="figures/conservation.png" width="620" alt="Conservation of d1 d2"></p>
 
@@ -59,21 +83,25 @@ Step 4 asks what happens to this picture when the table is deformed.
 - [x] Warm-up: the next bounce point via Vieta's formulas
 - [x] Caustic theorem, ellipse case, with a complete elementary proof
 - [x] Simulator and numerical verification
-- [x] Paper draft: background and method ([paper/main.tex](paper/main.tex))
-- [ ] Caustic theorem, hyperbola case; signed $d_1d_2 = b^2 - \lambda$
+- [x] Caustic theorem, hyperbola case; signed $d_1d_2 = b^2 - \lambda$
+- [x] Deformed tables: axis-orbit stability theorem and numerical study
+- [x] Full paper: [paper/main.pdf](paper/main.pdf) (9 pages)
+- [ ] Literature search for prior work on this family; check every reference
 - [ ] GeoGebra exploration
-- [ ] **Deformed tables and the onset of chaos (the original research)**
+- [ ] Re-derive and be able to explain every result
 
 ## Running
 
 ```bash
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
-.venv/bin/python verify.py     # 21 pass/fail checks
+.venv/bin/python verify.py     # 29 pass/fail checks
+.venv/bin/python research.py   # Section 4 sweep, about 15 minutes
 .venv/bin/python figures.py    # regenerates figures/
 ```
 
-The paper is in `paper/`. Compile it with `pdflatex` + `bibtex`, or upload
+The paper is [paper/main.pdf](paper/main.pdf). To rebuild it after editing
+`paper/main.tex`, run `cd paper && ../.tools/tectonic main.tex`, or upload
 `paper/` and `figures/` to Overleaf.
 
 ## Layout
@@ -81,8 +109,10 @@ The paper is in `paper/`. Compile it with `pdflatex` + `bibtex`, or upload
 | Path | Contents |
 |---|---|
 | `notes/` | derivations and proofs, each starting from a gaokao problem |
-| `billiards.py` | the simulator |
-| `verify.py` | numerical checks of every claim in the notes |
+| `billiards.py` | the ellipse simulator |
+| `deformed.py` | the deformed tables $u + v + \varepsilon uv = 1$ |
+| `research.py` | the Section 4 sweep, writes `results/` |
+| `verify.py` | numerical checks of every claim in the notes and paper |
 | `figures.py` | makes every figure in `figures/` |
 | `paper/` | LaTeX paper draft and bibliography |
 | `LOG.md` | work log, including exactly what was drafted with AI help |

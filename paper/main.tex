@@ -21,7 +21,6 @@
 \title[Breaking the caustics of elliptic billiards]{From a gaokao ellipse to the onset of chaos:\\ how the caustics of elliptic billiards break}
 \author{Boyan (Karina) Li}
 \address{Department of Mathematics, University of California San Diego}
-\email{TODO}
 \date{\today}
 
 \begin{document}
@@ -32,8 +31,12 @@ path is tangent to one fixed confocal conic, and the product $d_1d_2$ of the
 distances from the foci to the path is conserved. We give a self-contained,
 elementary proof of these classical facts using only tools from high-school
 analytic geometry, and verify them numerically to machine precision with a
-simulator built on Vieta's formulas. We then deform the table
-\todo{one sentence on the deformation family studied and the main result.}
+simulator built on Vieta's formulas. We then deform the equation itself,
+$x^2/4 + y^2/2 + \varepsilon x^2y^2/8 = 1$, a family joining the ellipse
+($\varepsilon = 0$) to a rectangle ($\varepsilon \to -1$). We compute the
+stability of its axis orbits exactly, and find numerically that chaos appears
+for every $\varepsilon \ne 0$. The measure of the chaotic set and the error in
+$d_1d_2$ on regular orbits both grow linearly in $|\varepsilon|$.
 \end{abstract}
 \maketitle
 
@@ -62,15 +65,29 @@ KaloshinSorrentino2018} for recent progress. This motivates our question:
 quantity stop being conserved, and how does this relate to the onset of chaos?}
 \end{quote}
 
-\todo{State the contributions in 3--4 bullet points once Section~\ref{sec:deformed}
-is done, and position them against the literature (Berry~\cite{Berry1981}
-studied deformations of the circle; search for prior work on the
-specific deformation family you choose).}
+\paragraph{Contributions.}
+\begin{itemize}
+  \item A self-contained proof of the caustic theorem and the conservation of
+  $d_1d_2$ using only high-school tools (Section~\ref{sec:ellipse}), verified
+  numerically to $10^{-13}$ (Section~\ref{sec:numerics}).
+  \item A one-parameter family of analytic tables joining the ellipse to a
+  rectangle, with the exact stability of its axis orbits
+  (Theorem~\ref{thm:axes}). As a by-product, the minor-axis orbit of the
+  gaokao ellipse is degenerate.
+  \item Numerical evidence that the chaotic fraction and the breaking of
+  $d_1d_2$ both scale linearly in the deformation (Section~\ref{sec:deformed}).
+\end{itemize}
+Deformations of integrable billiards have been studied before, notably by
+Berry~\cite{Berry1981} for the circle, and the existence of caustics near the
+boundary of any smooth convex table is due to Lazutkin~\cite{Lazutkin1973}.
+\todo{Literature search: check whether this family, or another
+interpolation between the ellipse and the rectangle such as the superellipses,
+has been studied, and cite it.}
 
 \paragraph{Outline.} Section~\ref{sec:ellipse} proves the classical results with
 elementary tools. Section~\ref{sec:numerics} describes the simulator and
 verifies Section~\ref{sec:ellipse} numerically. Section~\ref{sec:deformed}
-studies deformed tables.
+studies the deformed tables, and the last section discusses the results.
 
 %======================================================================
 \section{Billiards in an ellipse}\label{sec:ellipse}
@@ -174,8 +191,25 @@ two right-hand sides are equal. By SAS,
 $\triangle F_1'BF_2 \cong \triangle F_1BF_2'$.
 \end{proof}
 
-\todo{Hyperbola case of Theorem~\ref{thm:caustic} (replace the sum of focal
-distances by the absolute difference).}
+\begin{proof}[Proof of Theorem~\ref{thm:caustic}, hyperbola case]
+Now line $AB$ separates the foci, and so does $BC$ (Lemma~\ref{lem:side}).
+Assume first that $AB$ does not pass through the centre $O$. For
+$P \in AB$, $\bigl||PF_1| - |PF_2|\bigr| = \bigl||PF_1'| - |PF_2|\bigr| \le |F_1'F_2|$,
+with equality at exactly one point, since line $F_1'F_2$ is not parallel to
+$AB$. Hence $AB$ is tangent to the hyperbola with foci $F_1, F_2$ and real axis
+$|F_1'F_2|$. This is less than $|F_1F_2|$, because $AB$ meets line $F_1F_2$ inside the
+segment $F_1F_2$. Likewise $BC$ is tangent to the hyperbola with real axis
+$|F_1F_2'|$. Now $F_1'$ and $F_2$ lie on the same side of $AB$, so
+\[
+  \angle F_1'BF_2 = \bigl|\angle ABF_2 - \angle ABF_1\bigr|
+  = \bigl|\angle CBF_1 - \angle CBF_2\bigr| = \angle F_1BF_2' ,
+\]
+using $\sigma_B$ as before, and SAS gives $|F_1'F_2| = |F_1F_2'|$.
+
+A segment through $O$ is parallel to an asymptote of the hyperbola. The claim
+follows for it by continuity, since by Theorem~\ref{thm:conserved} the
+signed $d_1d_2$ is conserved on all nearby orbits.
+\end{proof}
 
 \subsection{The conserved quantity}
 
@@ -185,9 +219,23 @@ $d_1d_2 = b^2$.
 \end{lemma}
 
 \begin{proof}
-See \texttt{notes/03-conserved-quantity.md}.
-\todo{Write out the proof here.}
+The tangent line at $(x_0, y_0)$ is $x_0x/a^2 + y_0y/b^2 = 1$. By the
+point-to-line distance formula and $y_0^2 = b^2(1 - x_0^2/a^2)$,
+\[
+  d_1d_2 = \frac{1 - c^2x_0^2/a^4}{x_0^2/a^4 + y_0^2/b^4}
+         = \frac{1 - c^2x_0^2/a^4}{\frac{1}{b^2}\bigl(1 - c^2x_0^2/a^4\bigr)} = b^2. \qedhere
+\]
 \end{proof}
+
+Lemma~\ref{lem:product} is a standard result in Chinese high-school
+mathematics. So is the following tangency criterion: $Ax + By + C = 0$ is
+tangent to $x^2/a^2 + y^2/b^2 = 1$ iff $a^2A^2 + b^2B^2 = C^2$. The same
+discriminant computation proves:
+
+\begin{lemma}\label{lem:tangency}
+Let $P, Q \neq 0$ and $|\boldsymbol\nu| = 1$. The line $\boldsymbol\nu\cdot\mathbf x = h$
+is tangent to the conic $x^2/P + y^2/Q = 1$ iff $P\nu_x^2 + Q\nu_y^2 = h^2$.
+\end{lemma}
 
 \begin{theorem}\label{thm:conserved}
 Write the confocal family as $\mathcal C_\lambda: x^2/(a^2-\lambda) +
@@ -196,8 +244,20 @@ $\mathcal C_\lambda$, the signed product of the focal distances to each
 segment equals $b^2 - \lambda$. In particular, it is conserved.
 \end{theorem}
 
-\todo{Proof, from Theorem~\ref{thm:caustic} and Lemma~\ref{lem:product}
-(plus its hyperbola version).}
+\begin{proof}
+By Theorem~\ref{thm:caustic}, each segment lies on a line
+$\boldsymbol\nu\cdot\mathbf x = h$ tangent to $\mathcal C_\lambda$. The signed
+distances from $F_{1,2} = (\mp c, 0)$ are $\mp c\nu_x - h$. By
+Lemma~\ref{lem:tangency} with $P = a^2 - \lambda$, $Q = b^2 - \lambda$,
+\[
+  d_1d_2 = h^2 - c^2\nu_x^2 = (a^2 - \lambda - c^2)\nu_x^2 + (b^2 - \lambda)\nu_y^2
+         = b^2 - \lambda. \qedhere
+\]
+\end{proof}
+
+With $\lambda = 0$ this reproves Lemma~\ref{lem:product}. The quantity
+$d_1d_2$ is a geometric form of the classical Joachimsthal integral of the
+elliptic billiard~\cite{Tabachnikov2005}.
 
 \subsection{Poncelet's porism}
 
@@ -222,6 +282,7 @@ results.
 Check (on $x^2/4 + y^2/2 = 1$) & max.\ error \\
 \midrule
 Each step of the proof of Thm.~\ref{thm:caustic}, 300 random orbits & $7\times10^{-14}$ \\
+The same for the hyperbola case (510 bounces) & $8\times10^{-14}$ \\
 $d_1d_2$ constant, 5000 bounces (ellipse / hyperbola caustic) & $1.9\times10^{-13}$ \\
 Each segment tangent to $\mathcal C_{b^2 - d_1d_2}$ & $1.9\times10^{-13}$ \\
 Poncelet closure, rotation numbers $1/5, 1/4, 2/7, 1/3$ & $2.2\times10^{-13}$ \\
@@ -235,7 +296,7 @@ Perimeter for rotation number $1/4$ equals $4\sqrt{a^2+b^2}$ & $2.5\times10^{-14
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{caustics.png}
+  \includegraphics[width=0.9\linewidth]{caustics.png}
   \caption{Left: an orbit with an ellipse caustic. Right: the orbit of the
   warm-up problem ($P = (\sqrt2, 1)$, $\mathbf d = (-1,-1)$) crosses the focal
   segment, so its caustic is a hyperbola.}
@@ -252,7 +313,7 @@ Perimeter for rotation number $1/4$ equals $4\sqrt{a^2+b^2}$ & $2.5\times10^{-14
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{phase.png}
+  \includegraphics[width=0.88\linewidth]{phase.png}
   \caption{Phase portrait of the elliptic billiard. Each orbit lies on a level
   curve of $d_1d_2$. The red curves ($d_1d_2 = 0$) separate the ellipse-caustic
   and hyperbola-caustic regions.}
@@ -262,29 +323,237 @@ Perimeter for rotation number $1/4$ equals $4\sqrt{a^2+b^2}$ & $2.5\times10^{-14
 %======================================================================
 \section{Deformed tables}\label{sec:deformed}
 
-\todo{This section is the original contribution and is to be written by the
-author. Suggested structure:
-(1) the deformation family, e.g.\ superellipses $|x/a|^p + |y/b|^p = 1$ with
-$p$ near $2$, or the stadium;
-(2) how the next bounce is computed when Vieta's formula is no longer
-available (root finding);
-(3) phase portraits as $p$ moves away from $2$, showing which invariant
-curves survive (KAM, Lazutkin~\cite{Lazutkin1973}) and where chaotic layers
-appear;
-(4) a quantitative measure of how $d_1d_2$ fails to be conserved, as a
-function of the deformation;
-(5) Lyapunov exponents, compared with the stadium~\cite{Bunimovich1979}.}
+\subsection{A one-parameter family}
+
+Write $u = x^2/a^2$ and $v = y^2/b^2$, so that $C$ is $u + v = 1$. We study
+the tables
+\[
+  \mathcal T_\varepsilon:\quad u + v + \varepsilon\,uv = 1,
+\]
+with $a^2 = 4$, $b^2 = 2$ as in the introduction (Figure~\ref{fig:chaos}, left).
+The family has three features that make it a natural test case.
+\begin{itemize}
+  \item $\mathcal T_0$ is the ellipse $C$. As $\varepsilon \to -1$ the equation
+  tends to $(1-u)(1-v) = 0$, the rectangle $|x| \le a$, $|y| \le b$. Both
+  endpoints are integrable billiards.
+  \item Every $\mathcal T_\varepsilon$ passes through the four vertices
+  $(\pm a, 0)$, $(0, \pm b)$ of $C$.
+  \item The curve is analytic, so no singularities of the wall are introduced.
+\end{itemize}
+
+\begin{proposition}\label{prop:convex}
+In the scaled coordinates $X = x/a$, $Y = y/b$, the curvature of
+$\mathcal T_\varepsilon$ at the diagonal point $X = Y = s$ has the sign of
+$1 - \varepsilon s^2$, and it vanishes exactly when $\varepsilon = 3$.
+\end{proposition}
+
+\begin{proof}
+For $F = X^2 + Y^2 + \varepsilon X^2Y^2$ at $X = Y = s$, we have
+$F_X = F_Y = 2s(1 + \varepsilon s^2)$, $F_{XX} = F_{YY} = 2 + 2\varepsilon s^2$
+and $F_{XY} = 4\varepsilon s^2$. Hence
+$F_Y^2F_{XX} - 2F_XF_YF_{XY} + F_X^2F_{YY} = 4F_X^2(1 - \varepsilon s^2)$.
+On the curve, $2s^2 + \varepsilon s^4 = 1$; with $\varepsilon s^2 = 1$ this
+gives $\varepsilon = 3$.
+\end{proof}
+
+Numerically, $\mathcal T_\varepsilon$ is strictly convex for all
+$-1 < \varepsilon < 3$, and the diagonal is the only place where convexity is
+lost. We therefore study $-1 < \varepsilon < 3$.
+
+\paragraph{The next bounce.} Substituting $P + t\mathbf d$ into
+$\mathcal T_\varepsilon$ gives a quartic in $t$. Since $P$ lies on the wall,
+$t = 0$ is a root, and dividing by $t$ leaves a cubic
+$c_3t^3 + c_2t^2 + c_1t + c_0 = 0$ with $c_3 = \varepsilon u_2v_2$ and
+$c_2 = \varepsilon(u_1v_2 + u_2v_1)$, where $u(t) = u_0 + u_1t + u_2t^2$ and
+$v(t) = v_0 + v_1t + v_2t^2$. For $\varepsilon = 0$ the cubic collapses to the
+linear equation of Proposition~\ref{prop:next}. In general the next bounce is
+the smallest positive real root, which we compute from the companion matrix
+and polish with Newton's method. The computed points lie on the wall to
+$5\times10^{-15}$.
+
+\subsection{An exact result: stability of the axis orbits}
+
+The ball can bounce back and forth along either axis. For a 2-periodic orbit
+of length $L$ hitting the wall perpendicularly at two points with equal radii
+of curvature $R$, the linearized two-bounce map $M$ has
+\[
+  \operatorname{tr} M = 2\bigl(2(1 - L/R)^2 - 1\bigr),
+\]
+and the orbit is stable (elliptic) iff $|\operatorname{tr} M| < 2$; see
+e.g.~\cite{KozlovTreshchev1991, Tabachnikov2005}.
+
+\begin{theorem}\label{thm:axes}
+For $\mathcal T_\varepsilon$ with $a^2 = 4$, $b^2 = 2$,
+\[
+  \operatorname{tr} M_{\mathrm{major}} = 2\bigl(2(3 + 4\varepsilon)^2 - 1\bigr),
+  \qquad
+  \operatorname{tr} M_{\mathrm{minor}} = 2\bigl(2\varepsilon^2 - 1\bigr).
+\]
+Hence the major-axis orbit is unstable for $\varepsilon > -\frac12$ and
+stable for $-1 < \varepsilon < -\frac12$. The minor-axis orbit is stable for
+$0 < |\varepsilon| < 1$ and unstable for $\varepsilon > 1$.
+\end{theorem}
+
+\begin{proof}
+Near $(a, 0)$, solving for $u$ gives $u = (1 - v)/(1 + \varepsilon v) =
+1 - (1 + \varepsilon)v + O(v^2)$, so
+$x = a - \frac{a(1+\varepsilon)}{2b^2}y^2 + O(y^4)$ and
+$R = b^2/(a(1+\varepsilon))$. In the same way, $R = a^2/(b(1+\varepsilon))$ at
+$(0, b)$. With $L = 2a$ and $L = 2b$ respectively, $1 - L/R$ equals
+$1 - 2a^2(1+\varepsilon)/b^2 = -3 - 4\varepsilon$ and
+$1 - 2b^2(1+\varepsilon)/a^2 = -\varepsilon$.
+\end{proof}
+
+\begin{remark}
+At $\varepsilon = 0$, $\operatorname{tr} M_{\mathrm{minor}} = -2$: the
+minor-axis orbit of the gaokao ellipse is \emph{degenerate}. This happens
+because $a^2 = 2b^2$ (eccentricity $\sqrt2/2$), which places the centre of
+curvature at $(0, b)$ exactly at the opposite vertex $(0, -b)$, so $L = R$.
+For a generic ellipse the minor-axis orbit is non-degenerate.
+\end{remark}
+
+A finite-difference Jacobian of the numerical billiard map reproduces both
+traces to four decimal places for eleven values of $\varepsilon$ in $[-0.9, 2.5]$.
+
+\subsection{Numerical experiments}
+
+\paragraph{Method.} The billiard map preserves the measure $ds\,dp$, where
+$s$ is arclength and $p = \cos\alpha$, with $\alpha$ the angle between the
+outgoing direction and the tangent~\cite{Tabachnikov2005}. For each
+$\varepsilon$ we sample 3000 initial conditions uniformly with respect to
+this measure and follow each for 3000 bounces. For each orbit we record:
+\begin{itemize}
+  \item its finite-time Lyapunov exponent $\Lambda$, computed by Benettin's
+  method (a companion orbit at distance $10^{-8}$ in the coordinates
+  (polar angle, $\alpha$), renormalized after every bounce);
+  \item the range $\max - \min$ of the signed product $d_1d_2$ along the orbit,
+  using the foci $(\pm c, 0)$ of $C$.
+\end{itemize}
+The exponents fall into two well-separated groups, $\Lambda < 0.01$ and
+$\Lambda > 0.1$, with at most about $5\%$ of orbits in between for any
+$\varepsilon$. We call an orbit \emph{chaotic} if $\Lambda > 0.05$ and
+\emph{regular} if $\Lambda < 0.01$. For the ellipse all 3000 orbits are
+regular, and the range of $d_1d_2$ is $7\times10^{-14}$.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{deformed_phase.png}
+  \caption{Phase portraits of $\mathcal T_\varepsilon$. The separatrix of the
+  ellipse breaks first into a thin chaotic layer ($\varepsilon = -0.01$). Then
+  chaos spreads, and only islands around stable periodic orbits survive. At
+  $\varepsilon = -0.7$ a new island has appeared around the major-axis orbit,
+  as Theorem~\ref{thm:axes} predicts.}
+  \label{fig:deformed-phase}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{chaos_fraction.png}
+  \caption{Left: the tables $\mathcal T_\varepsilon$. Right: the fraction of
+  phase space that is chaotic (error bars: two standard errors). Dashed lines
+  mark the stability changes of Theorem~\ref{thm:axes}.}
+  \label{fig:chaos}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\linewidth]{d1d2_breaking.png}
+  \caption{Small deformations. Left: the median range of $d_1d_2$ along regular
+  orbits grows linearly in $|\varepsilon|$; on chaotic orbits it is 6--10 times
+  larger. Right: the chaotic fraction also grows linearly in
+  $|\varepsilon|$.}
+  \label{fig:breaking}
+\end{figure}
+
+\paragraph{Results.}
+\begin{enumerate}
+  \item \emph{Chaos appears immediately, starting at the separatrix.} Every
+  $\varepsilon \ne 0$ we tested has chaotic orbits. For small deformations they
+  form a layer around the curves $d_1d_2 = 0$, the orbits through a focus
+  (Figure~\ref{fig:deformed-phase}).
+  \item \emph{Linear scaling.} For $|\varepsilon| \le 0.03$ the chaotic fraction
+  is $f \approx 4.8\,|\varepsilon|^{0.98}$, almost the same for both signs of
+  $\varepsilon$ (Figure~\ref{fig:breaking}, right).
+  \item \emph{How fast $d_1d_2$ breaks.} On regular orbits, the median range
+  of $d_1d_2$ is $1.8\,|\varepsilon|^{1.00}$ for $|\varepsilon| \le 0.03$
+  (Figure~\ref{fig:breaking}, left). So $d_1d_2$ is no longer conserved, but it
+  survives as an \emph{approximate} invariant whose error is proportional to
+  the deformation. On chaotic orbits the range is 6--10 times larger.
+  \item \emph{Large deformations and the axis orbits.} For
+  $\varepsilon \le -\frac12$, where the major-axis orbit has become stable,
+  the chaotic fraction stops growing and stays at $0.81$--$0.84$ down to
+  $\varepsilon = -0.9$. For $\varepsilon > 1$, where the minor-axis orbit loses
+  stability, the growth steepens: $f = 0.74$ at $\varepsilon = 1$, $0.90$ at
+  $1.3$ and $0.97$ at $1.5$. Close to the convexity limit ($\varepsilon = 2.9$),
+  $99\%$ of phase space is chaotic.
+\end{enumerate}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{rcccccccc}
+\toprule
+$\varepsilon$ & $-0.9$ & $-0.5$ & $-0.1$ & $-0.01$ & $0.01$ & $0.1$ & $1$ & $1.5$ \\
+\midrule
+chaotic fraction & $0.82$ & $0.81$ & $0.41$ & $0.049$ & $0.047$ & $0.35$ & $0.74$ & $0.97$ \\
+\bottomrule
+\end{tabular}
+\caption{Chaotic fraction of phase space (3000 orbits; standard error at most $0.01$).}
+\label{tab:fractions}
+\end{table}
+
+\paragraph{Limitations.} Lyapunov exponents are computed over 3000 bounces,
+so very weakly chaotic orbits may be classified as regular, and the
+fractions are lower bounds for the true measure of the chaotic set. All
+experiments use one aspect ratio, $a^2 = 2b^2$, which is special by the
+Remark above. The scaling exponents are fitted over only $1.5$ decades of
+$\varepsilon$.
 
 %======================================================================
 \section{Discussion}
 
-\todo{What the results say about the question in the introduction, their
-limitations, and open questions.}
+We asked how quickly the conserved quantity of the elliptic billiard stops
+being conserved when the table is deformed. For the family
+$u + v + \varepsilon uv = 1$, the answer has two parts. On the orbits that
+remain regular, $d_1d_2$ becomes an approximate invariant, with an error that
+is linear in $\varepsilon$. A chaotic layer appears at once around the orbits
+through a focus, and its measure also grows linearly in $\varepsilon$. Both
+are consistent with first-order perturbation theory, in which the separatrix
+of the elliptic billiard splits by an amount of order $\varepsilon$; we have
+not proved this. For large deformations, the global picture is organized by
+the two axis orbits, whose stability changes exactly where
+Theorem~\ref{thm:axes} predicts.
+
+Since both $\varepsilon = 0$ and the limit $\varepsilon = -1$ are integrable,
+the large chaotic fraction near $\varepsilon = -0.9$ is notable.
+
+\paragraph{Open questions.}
+\begin{enumerate}
+  \item Prove the linear scaling of the chaotic fraction and compute the
+  constant $4.8$, for instance by a Melnikov-type calculation.
+  \item What happens as $\varepsilon \to -1$? Does the chaotic fraction tend
+  to $0$, as integrability of the rectangle might suggest, or not?
+  \item How do the results depend on the aspect ratio, in particular near the
+  degenerate case $a^2 = 2b^2$?
+  \item Prove that $\mathcal T_\varepsilon$ is strictly convex for all
+  $-1 < \varepsilon < 3$.
+\end{enumerate}
+
+Every number in this paper can be reproduced with the scripts
+\texttt{verify.py}, \texttt{research.py} and \texttt{figures.py}.
 
 \section*{Acknowledgements and use of AI}
 
-\todo{Disclose AI assistance precisely, following the target journal's policy.
-See \texttt{LOG.md} for the record of which parts were drafted with AI help.}
+This project began from a problem set by an AI tutor (Claude, Anthropic).
+At the author's request, Claude drafted substantial parts of the work: the
+written proofs, the simulation and verification code, the numerical
+experiments of Section~\ref{sec:deformed}, the figures, and the text of this
+paper. The author chose the topic and directed the project; the deformation
+family was proposed by Claude. The author is responsible for checking and
+revising all of the material. A dated record of what was
+drafted with AI assistance is kept in the file \texttt{LOG.md} of the
+project repository. The author takes full responsibility for the content.
+\todo{Revise this statement so it is accurate at the time of submission, and
+check it against the target journal's AI policy.}
 
 \bibliographystyle{amsplain}
 \bibliography{refs}

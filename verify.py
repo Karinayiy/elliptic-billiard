@@ -73,6 +73,27 @@ check("Lemma 3: separation never switches (violations)", switches, 0.5)
 check("angle identities in step 3", ang_err)
 check("|F1'F2| = |F1F2'|", gap)
 
+print("Note 02: hyperbola case, on random orbits whose segments separate the foci")
+gap_h = ang_h = 0.0
+count_h = 0
+for _ in range(300):
+    phi, th = rng.uniform(0, 2 * np.pi), rng.uniform(0.05, np.pi - 0.05)
+    P = np.array([E.a * np.cos(phi), E.b * np.sin(phi)])
+    n = E.normal(P)
+    points, _ = simulate(E, P, np.cos(th) * np.array([-n[1], n[0]]) - np.sin(th) * n, 6)
+    F1, F2 = E.foci
+    for A, B, C in zip(points[:-2], points[1:-1], points[2:]):
+        if side(F1, A, B - A) == side(F2, A, B - A):
+            continue
+        count_h += 1
+        F1p, F2p = mirror(F1, A, B - A), mirror(F2, B, C - B)
+        gap_h = max(gap_h, abs(np.linalg.norm(F2 - F1p) - np.linalg.norm(F2p - F1)))
+        ang_h = max(ang_h,
+                    abs(angle(F1p - B, F2 - B) - abs(angle(A - B, F2 - B) - angle(A - B, F1 - B))),
+                    abs(angle(F1 - B, F2p - B) - abs(angle(C - B, F1 - B) - angle(C - B, F2 - B))))
+check(f"angle identities, hyperbola case ({count_h} bounces)", ang_h)
+check("|F1'F2| = |F1F2'|, hyperbola case", gap_h)
+
 print("Note 03: d1d2 conserved and equal to b^2 - lambda, 5000 bounces")
 for d, kind in [((-1.0, -0.3), "ellipse"), ((-1.0, -1.0), "hyperbola")]:
     points, dirs = simulate(E, [np.sqrt(2), 1.0], d, 5000)
@@ -99,6 +120,50 @@ P, d = E.launch_on_caustic(lam, 0.0)
 points, _ = simulate(E, P, d, 4)
 check("rotation 1/4 perimeter = 4√(a²+b²) (rhombus through the vertices)",
       abs(np.sum(np.linalg.norm(np.diff(points, axis=0), axis=1)) - 4 * np.sqrt(E.a**2 + E.b**2)))
+
+print("Note 04: deformed tables u + v + eps*u*v = 1")
+from deformed import Table
+T0 = Table(E.a, E.b, 0.0)
+check("eps = 0 reproduces the ellipse simulator",
+      np.abs(T0.next_point(np.array([[np.sqrt(2), 1.0]]), np.array([[-1.0, -1.0]]) / np.sqrt(2))[0]
+             - E.next_bounce(np.array([np.sqrt(2), 1.0]), np.array([-1.0, -1.0]))).max())
+worst_wall = worst_inside = 0.0
+for eps in (-0.95, -0.5, -0.01, 0.01, 1.0, 2.9):
+    T = Table(E.a, E.b, eps)
+    r = np.random.default_rng(5)
+    P0, d0 = T.state(r.uniform(0, 2 * np.pi, 3000), r.uniform(0.001, np.pi - 0.001, 3000))
+    Q = T.next_point(P0, d0)
+    G = lambda X: X[:, 0]**2 / E.a**2 + X[:, 1]**2 / E.b**2 + eps * X[:, 0]**2 * X[:, 1]**2 / (E.a**2 * E.b**2)
+    worst_wall = max(worst_wall, np.abs(G(Q) - 1).max())
+    worst_inside = max(worst_inside, max((G(P0 + s * (Q - P0)) - 1).max() for s in np.linspace(0.01, 0.99, 25)))
+check("next point lies on the wall", worst_wall)
+check("chord interior lies inside the table (max G-1, must be < 0)", max(worst_inside, 0.0))
+check("strictly convex just below eps = 3", 0.0 if Table(E.a, E.b, 2.999).curvature_sign_ok(200000) else 1.0)
+def axis_trace(T, psi0, h=1e-6):
+    def f(x):
+        s, al = T.step(np.array([x[0]]), np.array([x[1]]))
+        s, al = T.step(s, al)
+        return np.array([wrap_angle(s[0] - psi0) + psi0, al[0]])
+    x0, J = np.array([psi0, np.pi / 2]), np.zeros((2, 2))
+    for j in range(2):
+        e = np.zeros(2)
+        e[j] = h
+        J[:, j] = (f(x0 + e) - f(x0 - e)) / (2 * h)
+    return np.trace(J)
+
+
+def wrap_angle(x):
+    return np.mod(x + np.pi, 2 * np.pi) - np.pi
+
+
+err_major = err_minor = 0.0
+for eps in (-0.9, -0.75, -0.6, -0.5, -0.3, 0.0, 0.3, 0.5, 1.0, 1.5, 2.5):
+    T = Table(E.a, E.b, eps)
+    err_major = max(err_major, abs(axis_trace(T, 0.0) - 2 * (2 * (3 + 4 * eps)**2 - 1)))
+    err_minor = max(err_minor, abs(axis_trace(T, np.pi / 2) - 2 * (2 * eps**2 - 1)))
+check("major-axis orbit: tr M = 2(2(3+4eps)^2-1)", err_major, 1e-3)
+check("minor-axis orbit: tr M = 2(2 eps^2-1)", err_minor, 1e-3)
+check("curvature vanishes at eps = 3 (diagonal)", 1.0 if Table(E.a, E.b, 3.0).curvature_sign_ok(200000) else 0.0)
 
 print()
 if failures:

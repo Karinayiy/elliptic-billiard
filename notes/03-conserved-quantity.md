@@ -67,10 +67,32 @@ the $x$-axis at $x = \sqrt2 - 1$, which lies between the foci $\pm\sqrt2$. So it
 caustic is a hyperbola, and the simulator gives $d_1 d_2 = \tfrac12 - \sqrt2 \approx -0.914$
 on all 2000 segments, constant to about $10^{-13}$.
 
-## To do myself
+## 4. Proof of $d_1 d_2 = b^2 - \lambda$, both cases at once
 
-- [ ] Prove the hyperbola version of Lemma 1 (signed product $= -b''^2$ for
-      $x^2/a''^2 - y^2/b''^2 = 1$).
-- [ ] Derive $d_1 d_2 = b^2 - \lambda$. Hint: a line $\boldsymbol\nu\cdot\mathbf x = h$
-      with $|\boldsymbol\nu| = 1$ is tangent to $x^2/P + y^2/Q = 1$ exactly when
-      $P\nu_x^2 + Q\nu_y^2 = h^2$.
+> **Gaokao starting point.** Another 二级结论: the line $Ax + By + C = 0$ is
+> tangent to $x^2/a^2 + y^2/b^2 = 1$ iff $a^2A^2 + b^2B^2 = C^2$.
+
+**Lemma 2 (tangency condition).** Let $P, Q \ne 0$ and $|\boldsymbol\nu| = 1$.
+The line $\boldsymbol\nu\cdot\mathbf x = h$ is tangent to the conic
+$x^2/P + y^2/Q = 1$ iff $P\nu_x^2 + Q\nu_y^2 = h^2$.
+
+*Proof.* If $\nu_y \neq 0$, substitute $y = (h - \nu_x x)/\nu_y$ and simplify the
+discriminant of the resulting quadratic in $x$. It vanishes iff
+$P\nu_x^2 + Q\nu_y^2 = h^2$. The case $\nu_y = 0$ is direct: the line is $x = \pm h$. $\blacksquare$
+
+**Theorem.** If a line $\boldsymbol\nu\cdot\mathbf x = h$ is tangent to
+$\mathcal C_\lambda$, then the signed distances from the foci satisfy $d_1 d_2 = b^2 - \lambda$.
+
+*Proof.* The signed distance from $F_{1,2} = (\mp c, 0)$ is $\mp c\nu_x - h$, so,
+using Lemma 2 with $P = a^2 - \lambda$, $Q = b^2 - \lambda$,
+
+```math
+d_1 d_2 = (-c\nu_x - h)(c\nu_x - h) = h^2 - c^2\nu_x^2
+        = (a^2 - \lambda - c^2)\,\nu_x^2 + (b^2 - \lambda)\,\nu_y^2
+        = (b^2 - \lambda)(\nu_x^2 + \nu_y^2) = b^2 - \lambda . \qquad\blacksquare
+```
+
+With $\lambda = 0$ this reproves Lemma 1 in one line. With $b^2 < \lambda < a^2$
+it gives the hyperbola version: the product is $-(\lambda - b^2) = -b''^2$, where
+$b''$ is the hyperbola's imaginary semi-axis. Combined with the caustic theorem,
+**the signed $d_1d_2$ is conserved on every non-focal orbit.**
