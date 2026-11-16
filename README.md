@@ -48,6 +48,7 @@ on $x^2/4 + y^2/2 = 1$:
 angle. Every orbit stays on a single curve, a level set of $d_1d_2$. The red
 curves are orbits aimed at a focus. They separate the orbits with ellipse
 caustics (top and bottom) from those with hyperbola caustics (the two islands).
+
 <p align="center"><img src="figures/phase.png" width="820" alt="Phase portrait"></p>
 
 ## Breaking the ellipse

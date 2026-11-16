@@ -349,6 +349,7 @@ def fig_chaos():
 
 if __name__ == "__main__":
     os.makedirs("figures", exist_ok=True)
-    for make in (fig_caustics, fig_proof, fig_poncelet, fig_phase, fig_conservation):
+    for make in (fig_caustics, fig_proof, fig_poncelet, fig_phase, fig_conservation,
+                 fig_deformed_phase, fig_chaos):
         make()
         print("made", make.__name__)
