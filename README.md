@@ -30,7 +30,7 @@ billiard is integrable.
 
 ## Results so far
 
-Every claim in the notes is checked by `verify.py` (30 checks, all passing),
+Every claim in the notes is checked by `verify.py` (31 checks, all passing),
 on $x^2/4 + y^2/2 = 1$:
 
 | Check | max. error |
@@ -73,9 +73,17 @@ quartic, and since $t = 0$ is still a root, Vieta's step becomes a cubic
   for small $|\varepsilon|$.
 - **$d_1d_2$ breaks linearly.** On regular orbits its range is
   $\approx 1.8\,|\varepsilon|^{1.00}$, so it survives as an approximate invariant.
+- **For every aspect ratio** tested ($b/a$ from 0.5 to 0.9) the growth is
+  linear, with a shape-dependent constant. The gaokao ellipse's minor-axis
+  orbit sits exactly at a 1:4 resonance ($M = -I$).
+- **The rectangle is a singular limit.** Even at $1 + \varepsilon = 10^{-3}$,
+  80% of phase space is chaotic, because the corners sharpen like
+  $\sqrt{1+\varepsilon}$.
 
 <p align="center"><img src="figures/chaos_fraction.png" width="900" alt="Chaotic fraction"></p>
 <p align="center"><img src="figures/d1d2_breaking.png" width="900" alt="Breaking of d1d2"></p>
+
+<p align="center"><img src="figures/extensions.png" width="900" alt="Follow-up experiments"></p>
 
 <p align="center"><img src="figures/conservation.png" width="620" alt="Conservation of d1 d2"></p>
 
@@ -86,20 +94,22 @@ quartic, and since $t = 0$ is still a root, Vieta's step becomes a cubic
 - [x] Simulator and numerical verification
 - [x] Caustic theorem, hyperbola case; signed $d_1d_2 = b^2 - \lambda$
 - [x] Deformed tables: axis-orbit stability theorem and numerical study
-- [x] Full paper: [paper/main.pdf](paper/main.pdf) (10 pages)
+- [x] Full paper: [paper/main.pdf](paper/main.pdf) (11 pages)
 - [x] Literature search (first pass, see note 04); references checked
 - [ ] Read the related papers and confirm the family is new
 - [ ] GeoGebra exploration
-- [ ] Re-derive and be able to explain every result
+- [x] Follow-ups: robustness, aspect ratio, rectangle limit
+- [ ] Re-derive and be able to explain every result ([STUDY-GUIDE.md](STUDY-GUIDE.md))
 
 ## Running
 
 ```bash
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
-.venv/bin/python verify.py     # 30 pass/fail checks
+.venv/bin/python verify.py     # 31 pass/fail checks
 .venv/bin/python research.py   # Section 4 sweep, about 15 minutes
 .venv/bin/python figures.py    # regenerates figures/
+for p in A0 A1 A2 A3 B0 B1 B2 B3 B4 C; do .venv/bin/python extensions.py $p & done; wait   # follow-ups, ~6 min on 10 cores
 ```
 
 The paper is [paper/main.pdf](paper/main.pdf). To rebuild it after editing
@@ -114,7 +124,9 @@ The paper is [paper/main.pdf](paper/main.pdf). To rebuild it after editing
 | `billiards.py` | the ellipse simulator |
 | `deformed.py` | the deformed tables $u + v + \varepsilon uv = 1$ |
 | `research.py` | the Section 4 sweep, writes `results/` |
+| `extensions.py` | follow-up experiments (robustness, aspect ratio, rectangle limit) |
 | `verify.py` | numerical checks of every claim in the notes and paper |
 | `figures.py` | makes every figure in `figures/` |
 | `paper/` | LaTeX paper draft and bibliography |
+| `STUDY-GUIDE.md` | what I must be able to re-derive and explain |
 | `LOG.md` | work log, including exactly what was drafted with AI help |

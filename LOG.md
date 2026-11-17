@@ -54,3 +54,14 @@ An honest record of what I did myself and what I got help with.
 - Still mine: reading the related papers to confirm the family is new,
   re-deriving both new proofs, and checking the AI statement against the
   target journal's policy.
+
+## 2026-11-16 (later) — Follow-up experiments
+
+- I asked Claude to keep improving the project, which is my primary
+  independent project. Drafted by Claude: Theorem 12 for every aspect ratio
+  and the 1:4 resonance remark ($M = -I$ for the gaokao ellipse),
+  `extensions.py` (robustness, aspect ratio, rectangle limit), the new
+  figure, Section 4.4 of the paper, and `STUDY-GUIDE.md`. `verify.py` now has
+  31 checks.
+- Still mine: everything in `STUDY-GUIDE.md`, and one next step that I do
+  myself without AI drafting.

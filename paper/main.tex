@@ -36,7 +36,11 @@ $x^2/4 + y^2/2 + \varepsilon x^2y^2/8 = 1$, a family joining the ellipse
 ($\varepsilon = 0$) to a rectangle ($\varepsilon \to -1$). We compute the
 stability of its axis orbits exactly, and find numerically that chaos appears
 for every $\varepsilon \ne 0$. The measure of the chaotic set and the error in
-$d_1d_2$ on regular orbits both grow linearly in $|\varepsilon|$.
+$d_1d_2$ on regular orbits both grow linearly in $|\varepsilon|$, for every
+aspect ratio we tested. Approaching the rectangle does not restore order:
+the chaotic fraction stays near $0.8$, because the corners sharpen like
+$\sqrt{1+\varepsilon}$. Finally, the minor-axis orbit of the gaokao ellipse
+turns out to sit exactly at a $1{:}4$ resonance.
 \end{abstract}
 \maketitle
 
@@ -75,7 +79,8 @@ quantity stop being conserved, and how does this relate to the onset of chaos?}
   (Theorem~\ref{thm:axes}). As a by-product, the minor-axis orbit of the
   gaokao ellipse is degenerate.
   \item Numerical evidence that the chaotic fraction and the breaking of
-  $d_1d_2$ both scale linearly in the deformation (Section~\ref{sec:deformed}).
+  $d_1d_2$ both scale linearly in the deformation, for several aspect ratios,
+  and that the rectangle limit is singular (Section~\ref{sec:deformed}).
 \end{itemize}
 Deformations of integrable billiards have been studied before, notably by
 Berry~\cite{Berry1981} for the circle, and the existence of caustics near the
@@ -448,15 +453,27 @@ the actual billiard map agrees with the lemma (see below), and a general
 treatment is in~\cite{KozlovTreshchev1991, Tabachnikov2005}.
 
 \begin{theorem}\label{thm:axes}
-For $\mathcal T_\varepsilon$ with $a^2 = 4$, $b^2 = 2$,
+Let $k = b^2/a^2 \in (0, 1)$ and $-1 < \varepsilon < 3$. The axis orbits of
+$\mathcal T_\varepsilon$ have
+\[
+  g_{\mathrm{major}} = 1 - \frac{2(1+\varepsilon)}{k},
+  \qquad
+  g_{\mathrm{minor}} = 1 - 2k(1+\varepsilon),
+  \qquad
+  \operatorname{tr} M = 4g^2 - 2 .
+\]
+Hence the major-axis orbit is stable iff $\varepsilon < k - 1$, and the
+minor-axis orbit is unstable iff $\varepsilon > 1/k - 1$; it is degenerate,
+with $M = -I$, iff $k(1+\varepsilon) = \frac12$. For the gaokao ellipse
+($k = \frac12$),
 \[
   \operatorname{tr} M_{\mathrm{major}} = 2\bigl(2(3 + 4\varepsilon)^2 - 1\bigr),
   \qquad
-  \operatorname{tr} M_{\mathrm{minor}} = 2\bigl(2\varepsilon^2 - 1\bigr).
+  \operatorname{tr} M_{\mathrm{minor}} = 2\bigl(2\varepsilon^2 - 1\bigr),
 \]
-Hence the major-axis orbit is unstable for $\varepsilon > -\frac12$ and
-stable for $-1 < \varepsilon < -\frac12$. The minor-axis orbit is stable for
-$0 < |\varepsilon| < 1$ and unstable for $\varepsilon > 1$.
+so the major-axis orbit is stable exactly for $-1 < \varepsilon < -\frac12$,
+and the minor-axis orbit is stable for $0 < |\varepsilon| < 1$ and unstable for
+$\varepsilon > 1$.
 \end{theorem}
 
 \begin{proof}
@@ -464,22 +481,31 @@ Near $(a, 0)$, solving for $u$ gives $u = (1 - v)/(1 + \varepsilon v) =
 1 - (1 + \varepsilon)v + O(v^2)$, so
 $x = a - \frac{a(1+\varepsilon)}{2b^2}y^2 + O(y^4)$ and
 $R = b^2/(a(1+\varepsilon))$. In the same way, $R = a^2/(b(1+\varepsilon))$ at
-$(0, b)$. With $L = 2a$ and $L = 2b$ respectively, $1 - L/R$ equals
-$1 - 2a^2(1+\varepsilon)/b^2 = -3 - 4\varepsilon$ and
-$1 - 2b^2(1+\varepsilon)/a^2 = -\varepsilon$, and Lemma~\ref{lem:trace}
-gives the traces.
+$(0, b)$. With $L = 2a$ and $L = 2b$ respectively, $g = 1 - L/R$ takes the two
+stated values, and Lemma~\ref{lem:trace} gives the traces and the stability.
+The major-axis orbit is stable iff $|g_{\mathrm{major}}| < 1$, i.e.
+$0 < (1 + \varepsilon)/k < 1$; the minor-axis orbit is unstable iff
+$|g_{\mathrm{minor}}| > 1$, i.e. $k(1+\varepsilon) > 1$. If
+$g = 0$ then $\operatorname{tr} N = 0$ and $\det N = 1$, so $N^2 = -I$ by the
+Cayley--Hamilton theorem.
 \end{proof}
 
-\begin{remark}
-At $\varepsilon = 0$, $\operatorname{tr} M_{\mathrm{minor}} = -2$: the
-minor-axis orbit of the gaokao ellipse is \emph{degenerate}. This happens
-because $a^2 = 2b^2$ (eccentricity $\sqrt2/2$), which places the centre of
-curvature at $(0, b)$ exactly at the opposite vertex $(0, -b)$, so $L = R$.
-For a generic ellipse the minor-axis orbit is non-degenerate.
+\begin{remark}\label{rem:resonance}
+For the gaokao ellipse itself ($\varepsilon = 0$, $k = \frac12$) the
+minor-axis orbit has $M = -I$ exactly. Geometrically, $a^2 = 2b^2$
+(eccentricity $\sqrt2/2$) places the centre of curvature at $(0, b)$ at the
+opposite vertex $(0, -b)$, so $L = R$ and $g = 0$. Dynamically, a ball launched
+almost along the minor axis returns, to first order, to its starting state
+after exactly four bounces: the orbit sits at the $1{:}4$ resonance, the borderline case among
+the strong resonances in the stability theory of area-preserving maps, where
+linear information alone does not decide stability. For a generic ellipse the minor-axis orbit is non-degenerate.
 \end{remark}
 
-A finite-difference Jacobian of the numerical billiard map reproduces both
-traces to four decimal places for eleven values of $\varepsilon$ in $[-0.9, 2.5]$.
+A finite-difference Jacobian of the numerical billiard map reproduces the
+traces to four decimal places for eleven values of $\varepsilon$ in
+$[-0.9, 2.5]$ at $k = \frac12$, and for sixteen tables with
+$b/a \in \{0.5, 0.6, 0.8, 0.9\}$; at $\varepsilon = 0$, $k = \frac12$ it
+returns $M = -I$ to eight decimal places.
 
 \subsection{Numerical experiments}
 
@@ -503,7 +529,7 @@ regular, and the range of $d_1d_2$ is $7\times10^{-14}$.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\linewidth]{deformed_phase.png}
+  \includegraphics[width=0.94\linewidth]{deformed_phase.png}
   \caption{Phase portraits of $\mathcal T_\varepsilon$. The separatrix of the
   ellipse breaks first into a thin chaotic layer ($\varepsilon = -0.01$). Then
   chaos spreads, and only islands around stable periodic orbits survive. At
@@ -523,7 +549,7 @@ regular, and the range of $d_1d_2$ is $7\times10^{-14}$.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.92\linewidth]{d1d2_breaking.png}
+  \includegraphics[width=0.82\linewidth]{d1d2_breaking.png}
   \caption{Small deformations. Left: the median range of $d_1d_2$ along regular
   orbits grows linearly in $|\varepsilon|$; on chaotic orbits it is 6--10 times
   larger. Right: the chaotic fraction also grows linearly in
@@ -567,12 +593,65 @@ chaotic fraction & $0.82$ & $0.81$ & $0.41$ & $0.049$ & $0.047$ & $0.35$ & $0.74
 \label{tab:fractions}
 \end{table}
 
-\paragraph{Limitations.} Lyapunov exponents are computed over 3000 bounces,
-so very weakly chaotic orbits may be classified as regular, and the
-fractions are lower bounds for the true measure of the chaotic set. All
-experiments use one aspect ratio, $a^2 = 2b^2$, which is special by the
-Remark above. The scaling exponents are fitted over only $1.5$ decades of
-$\varepsilon$.
+\subsection{Follow-up experiments}\label{sec:followup}
+
+Three further experiments address the obvious doubts about these results
+(Figure~\ref{fig:extensions}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.95\linewidth]{extensions.png}
+  \caption{(a) The constant $C$ in $f \approx C|\varepsilon|$ for five aspect
+  ratios ($2000$ orbits per point; $C$ is a least-squares fit through the origin
+  over $|\varepsilon| \in \{0.003, 0.01, 0.03\}$, uncertainty about $10\%$).
+  (b) The chaotic fraction as the table approaches the rectangle, down to
+  $1 + \varepsilon = 10^{-3}$. (c) The chaotic fraction for orbit lengths
+  $10^3$, $3\times10^3$ and $10^4$; shaded bands show the range for FTLE
+  thresholds between $0.02$ and $0.1$.}
+  \label{fig:extensions}
+\end{figure}
+
+\paragraph{Robustness.} For $\varepsilon \in \{-0.1, 0.01, 0.1, 1\}$, increasing
+the orbit length from $10^3$ to $10^4$ bounces changes the chaotic fraction by
+at most $0.017$, and changing the threshold anywhere between $0.02$ and $0.1$
+changes it by at most $0.05$ (Figure~\ref{fig:extensions}c). The
+classification is therefore not an artefact of the orbit length or the
+threshold.
+
+\paragraph{Aspect ratio.} We repeated the small-$\varepsilon$ experiment for
+$b/a \in \{0.5, 0.6, 1/\sqrt2, 0.8, 0.9\}$ (Figure~\ref{fig:extensions}a).
+Linear growth holds for every aspect ratio, but the constant depends on the
+shape: $C$ is about $3$--$4$ at $b/a = 0.5$, about $5$ for
+$b/a \in [0.7, 0.8]$, and drops to about $1.6$ at $b/a = 0.9$. The drop is
+expected: as the ellipse approaches a circle, the region of phase space
+occupied by hyperbola caustics, whose boundary is where the chaos starts,
+shrinks to zero. We see no special effect at the degenerate aspect ratio
+$b/a = 1/\sqrt2$ of Remark~\ref{rem:resonance}: the $1{:}4$ resonance of the
+minor-axis orbit does not visibly change the chaotic fraction, which is
+consistent with chaos starting at the separatrix of the major-axis orbit
+rather than near the minor axis. The error of $d_1d_2$ on regular orbits is
+linear in $|\varepsilon|$ for every aspect ratio, with constants between $1.2$
+and $2.1$.
+
+\paragraph{Approaching the rectangle.} Both $\varepsilon = 0$ and the limit
+$\varepsilon \to -1$ are integrable, yet the chaotic fraction does
+\emph{not} tend to zero as $\varepsilon \to -1$: it stays at $0.80$--$0.81$
+for $1 + \varepsilon$ between $10^{-1}$ and $10^{-3}$
+(Figure~\ref{fig:extensions}b). The reason is that the limit is singular. The
+four sides flatten, but the corners sharpen: the smallest radius of curvature
+of the wall is $0.39$, $0.12$ and $0.038$ at $1 + \varepsilon = 10^{-1}$,
+$10^{-2}$ and $10^{-3}$, decreasing like $\sqrt{1 + \varepsilon}$. A table that
+is close to the rectangle in shape is not close to it as a dynamical system,
+because orbits that reach a sharply curved corner are scattered as in
+Bunimovich's focusing billiards~\cite{Bunimovich1979}. The roughly $20\%$ of
+orbits that stay regular are not concentrated near the axis orbits; their
+initial angles are spread over the whole range.
+
+\paragraph{Limitations.} Lyapunov exponents are computed over finitely many
+bounces, so very weakly chaotic orbits may be classified as regular, and the
+fractions are lower bounds for the true measure of the chaotic set. The
+scaling exponents are fitted over only $1.5$ decades of $\varepsilon$, and the
+aspect-ratio constants over three values of $|\varepsilon|$ each.
 
 %======================================================================
 \section{Discussion}
@@ -590,16 +669,20 @@ the two axis orbits, whose stability changes exactly where
 Theorem~\ref{thm:axes} predicts.
 
 Since both $\varepsilon = 0$ and the limit $\varepsilon = -1$ are integrable,
-the large chaotic fraction near $\varepsilon = -0.9$ is notable.
+the large chaotic fraction near $\varepsilon = -0.9$ is notable. The
+follow-up experiments explain it: the rectangle is a singular limit, and the
+chaotic fraction stays near $0.8$ all the way to $1 + \varepsilon = 10^{-3}$.
+The linear law $f \approx C|\varepsilon|$ holds for every aspect ratio we
+tested, with a shape-dependent constant.
 
 \paragraph{Open questions.}
 \begin{enumerate}
   \item Prove the linear scaling of the chaotic fraction and compute the
   constant $4.8$, for instance by a Melnikov-type calculation.
-  \item What happens as $\varepsilon \to -1$? Does the chaotic fraction tend
-  to $0$, as integrability of the rectangle might suggest, or not?
-  \item How do the results depend on the aspect ratio, in particular near the
-  degenerate case $a^2 = 2b^2$?
+  \item Explain the dependence of $C$ on the aspect ratio, in particular its
+  maximum near $b/a \approx 0.7$--$0.8$ and its decay as $b/a \to 1$.
+  \item As $\varepsilon \to -1$, which orbits stay regular, and does the
+  chaotic fraction converge to a limit strictly between $0$ and $1$?
 \end{enumerate}
 
 Every number in this paper can be reproduced with the scripts

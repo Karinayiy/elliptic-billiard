@@ -163,6 +163,17 @@ for eps in (-0.9, -0.75, -0.6, -0.5, -0.3, 0.0, 0.3, 0.5, 1.0, 1.5, 2.5):
     err_minor = max(err_minor, abs(axis_trace(T, np.pi / 2) - 2 * (2 * eps**2 - 1)))
 check("major-axis orbit: tr M = 2(2(3+4eps)^2-1)", err_major, 1e-3)
 check("minor-axis orbit: tr M = 2(2 eps^2-1)", err_minor, 1e-3)
+
+# General aspect ratio k = b^2/a^2: g_major = 1 - 2(1+eps)/k, g_minor = 1 - 2k(1+eps), tr = 4g^2 - 2.
+err_gen = 0.0
+for ratio in (0.5, 0.6, 0.8, 0.9):
+    k = ratio**2
+    for eps in (-0.5, -0.2, 0.1, 0.7):
+        T = Table(2.0, 2.0 * ratio, eps)
+        g_maj, g_min = 1 - 2 * (1 + eps) / k, 1 - 2 * k * (1 + eps)
+        err_gen = max(err_gen, abs(axis_trace(T, 0.0) - (4 * g_maj**2 - 2)) / max(1, abs(4 * g_maj**2 - 2)),
+                      abs(axis_trace(T, np.pi / 2) - (4 * g_min**2 - 2)))
+check("axis traces for general b/a (16 tables, relative error)", err_gen, 1e-3)
 check("curvature vanishes at eps = 3 (diagonal)", 1.0 if Table(E.a, E.b, 3.0).curvature_sign_ok(200000) else 0.0)
 
 # Proposition (convexity): the curvature has the sign of 1 - 3*eps*X^2*Y^2 (X = x/a, Y = y/b).

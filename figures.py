@@ -347,9 +347,79 @@ def fig_chaos():
     print(f"   d1d2 range on regular orbits ~ |eps|^{slope:.3f} for |eps| <= 0.03")
 
 
+def load_extensions():
+    """Collect results/ext_*.npz written by extensions.py."""
+    import glob
+    rob = [dict(np.load(f)) for f in sorted(glob.glob("results/ext_A*.npz"))]
+    asp = sorted([dict(np.load(f)) for f in glob.glob("results/ext_B*.npz")], key=lambda d: float(d["ratio"]))
+    rect = dict(np.load("results/ext_C.npz"))
+    return rob, asp, rect
+
+
+def slope_through_origin(eps, frac):
+    """Least-squares C in frac = C|eps|."""
+    x = np.abs(eps)
+    return np.sum(x * frac) / np.sum(x * x)
+
+
+def fig_extensions():
+    rob, asp, rect = load_extensions()
+    sweep = np.load("results/sweep.npz")
+    fig, axes = plt.subplots(1, 3, figsize=(14, 4.2))
+
+    ax = axes[0]
+    ratios = np.array([float(d["ratio"]) for d in asp])
+    for sign, col, name in [(-1, TEAL, "$\\varepsilon < 0$"), (1, CAUSTIC, "$\\varepsilon > 0$")]:
+        C = []
+        for d in asp:
+            sel = np.sign(d["eps"]) == sign
+            C.append(slope_through_origin(d["eps"][sel], (d["ftle"][sel] > 0.05).mean(axis=1)))
+        ax.plot(ratios, C, "o-", color=col, ms=5, lw=1.3, label=name)
+    ax.axvline(1 / np.sqrt(2), color=MUTED, lw=0.8, ls=":")
+    ax.text(1 / np.sqrt(2) + 0.01, ax.get_ylim()[1] * 0.06, "gaokao\nellipse", color=MUTED, fontsize=9)
+    ax.set_xlabel("aspect ratio $b/a$")
+    ax.set_ylabel("$C$ in  chaotic fraction $\\approx C\\,|\\varepsilon|$")
+    ax.set_title("(a) the constant depends on the shape")
+    ax.set_ylim(bottom=0)
+    ax.legend(frameon=False, fontsize=9)
+
+    ax = axes[1]
+    e_sw = sweep["eps"]
+    f_sw = (sweep["ftle"] > 0.05).mean(axis=1)
+    m = e_sw <= -0.3
+    x = np.concatenate([1 + e_sw[m], 1 + rect["eps"]])
+    f = np.concatenate([f_sw[m], (rect["ftle"] > 0.05).mean(axis=1)])
+    o = np.argsort(x)
+    ax.semilogx(x[o], f[o], "o-", color=TEAL, ms=5, lw=1.3)
+    ax.set_xlabel("distance from the rectangle, $1 + \\varepsilon$")
+    ax.set_ylabel("chaotic fraction")
+    ax.set_ylim(0, 1)
+    ax.set_title("(b) approaching the rectangle")
+
+    ax = axes[2]
+    for d, col in zip(rob, PALETTE):
+        fr = (d["ftle"] > 0.05).mean(axis=1)
+        lo = (d["ftle"] > 0.1).mean(axis=1)
+        hi = (d["ftle"] > 0.02).mean(axis=1)
+        ax.plot(d["steps"], fr, "o-", color=col, ms=5, lw=1.3, label=f"$\\varepsilon = {float(d['eps']):g}$")
+        ax.fill_between(d["steps"], lo, hi, color=col, alpha=0.15, lw=0)
+    ax.set_xscale("log")
+    ax.set_xlabel("orbit length (bounces)")
+    ax.set_ylabel("chaotic fraction")
+    ax.set_ylim(0, 1)
+    ax.set_title("(c) robustness: length and threshold")
+    ax.legend(frameon=False, fontsize=9, loc="center right", bbox_to_anchor=(1.0, 0.6))
+    for a in axes:
+        for sp in ("top", "right"):
+            a.spines[sp].set_visible(False)
+    fig.tight_layout()
+    fig.savefig("figures/extensions.png")
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     os.makedirs("figures", exist_ok=True)
     for make in (fig_caustics, fig_proof, fig_poncelet, fig_phase, fig_conservation,
-                 fig_deformed_phase, fig_chaos):
+                 fig_deformed_phase, fig_chaos, fig_extensions):
         make()
         print("made", make.__name__)

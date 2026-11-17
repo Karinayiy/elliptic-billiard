@@ -113,6 +113,30 @@ sits in the gap between them.
   steepens (0.74, 0.82, 0.87, 0.90, 0.95 at $\varepsilon = 1.0, \dots, 1.4$) and
   reaches 0.97 by $\varepsilon = 1.5$.
 
+## 5. Follow-up experiments (`extensions.py`)
+
+![follow-up experiments](../figures/extensions.png)
+
+- **General aspect ratio (exact).** With $k = b^2/a^2$:
+  $g_{\text{major}} = 1 - 2(1+\varepsilon)/k$ and $g_{\text{minor}} = 1 - 2k(1+\varepsilon)$.
+  For the gaokao ellipse ($k = 1/2$, $\varepsilon = 0$), $g_{\text{minor}} = 0$, so
+  $N^2 = -I$ (Cayley–Hamilton): a ball launched almost along the minor axis
+  returns to its starting state after exactly 4 bounces, to first order. This
+  is the **1:4 resonance**.
+- **Robustness.** Going from 1000 to 10000 bounces changes the chaotic
+  fraction by at most 0.017. Moving the threshold between 0.02 and 0.1 changes
+  it by at most 0.05.
+- **Aspect ratio.** $f \approx C|\varepsilon|$ holds for
+  $b/a = 0.5, 0.6, 0.71, 0.8, 0.9$. $C \approx 3.6, 4.2, 5.2, 5.0, 1.6$
+  (averaging the two signs). $C$ is small near the circle, because the
+  hyperbola-caustic region (where chaos starts) shrinks. The 1:4 resonance at
+  $b/a = 1/\sqrt2$ has no visible effect.
+- **Approaching the rectangle.** The chaotic fraction stays at about 0.80 down
+  to $1 + \varepsilon = 10^{-3}$. The rectangle is a **singular limit**: the
+  sides flatten, but the corners sharpen (smallest radius of curvature
+  $0.39, 0.12, 0.038$ at $1+\varepsilon = 10^{-1}, 10^{-2}, 10^{-3}$, i.e. like
+  $\sqrt{1+\varepsilon}$), and orbits that reach a corner are scattered.
+
 ## Prior work (literature search, 2026-11-16)
 
 - Delshams & Ramírez-Ros, *Nonlinearity* 9 (1996): Melnikov method for planar
