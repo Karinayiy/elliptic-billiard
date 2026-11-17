@@ -165,6 +165,20 @@ check("major-axis orbit: tr M = 2(2(3+4eps)^2-1)", err_major, 1e-3)
 check("minor-axis orbit: tr M = 2(2 eps^2-1)", err_minor, 1e-3)
 check("curvature vanishes at eps = 3 (diagonal)", 1.0 if Table(E.a, E.b, 3.0).curvature_sign_ok(200000) else 0.0)
 
+# Proposition (convexity): the curvature has the sign of 1 - 3*eps*X^2*Y^2 (X = x/a, Y = y/b).
+bad = 0
+for eps in [-0.9, -0.5, 0.5, 1.0, 2.0, 2.9, 3.5, 5.0]:
+    T = Table(E.a, E.b, eps)
+    psi = np.linspace(0, 2 * np.pi, 20000, endpoint=False)
+    P = T.point(psi)
+    dP = np.gradient(P, psi, axis=0)
+    d2P = np.gradient(dP, psi, axis=0)
+    k = dP[:, 0] * d2P[:, 1] - dP[:, 1] * d2P[:, 0]
+    f = 1 - 3 * eps * (P[:, 0] / E.a) ** 2 * (P[:, 1] / E.b) ** 2
+    keep = np.abs(f) > 1e-3
+    bad += int(np.sum(np.sign(k[keep]) != np.sign(f[keep])))
+check("curvature sign = sign(1 - 3 eps X^2 Y^2), 8 values of eps (mismatches)", bad, 0.5)
+
 print()
 if failures:
     print(f"{len(failures)} check(s) FAILED")

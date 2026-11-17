@@ -30,7 +30,7 @@ billiard is integrable.
 
 ## Results so far
 
-Every claim in the notes is checked by `verify.py` (29 checks, all passing),
+Every claim in the notes is checked by `verify.py` (30 checks, all passing),
 on $x^2/4 + y^2/2 = 1$:
 
 | Check | max. error |
@@ -56,7 +56,7 @@ caustics (top and bottom) from those with hyperbola caustics (the two islands).
 Deform the gaokao equation itself. With $u = x^2/4$ and $v = y^2/2$, study
 $u + v + \varepsilon uv = 1$. At $\varepsilon = 0$ this is the ellipse, and as
 $\varepsilon \to -1$ it becomes a rectangle; both are integrable. The tables are
-convex exactly for $-1 < \varepsilon < 3$. Substituting a line now gives a
+convex exactly for $-1 < \varepsilon < 3$ (proved with AM–GM). Substituting a line now gives a
 quartic, and since $t = 0$ is still a root, Vieta's step becomes a cubic
 ([note 04](notes/04-deformed-tables.md)).
 
@@ -86,8 +86,9 @@ quartic, and since $t = 0$ is still a root, Vieta's step becomes a cubic
 - [x] Simulator and numerical verification
 - [x] Caustic theorem, hyperbola case; signed $d_1d_2 = b^2 - \lambda$
 - [x] Deformed tables: axis-orbit stability theorem and numerical study
-- [x] Full paper: [paper/main.pdf](paper/main.pdf) (9 pages)
-- [ ] Literature search for prior work on this family; check every reference
+- [x] Full paper: [paper/main.pdf](paper/main.pdf) (10 pages)
+- [x] Literature search (first pass, see note 04); references checked
+- [ ] Read the related papers and confirm the family is new
 - [ ] GeoGebra exploration
 - [ ] Re-derive and be able to explain every result
 
@@ -96,7 +97,7 @@ quartic, and since $t = 0$ is still a root, Vieta's step becomes a cubic
 ```bash
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
-.venv/bin/python verify.py     # 29 pass/fail checks
+.venv/bin/python verify.py     # 30 pass/fail checks
 .venv/bin/python research.py   # Section 4 sweep, about 15 minutes
 .venv/bin/python figures.py    # regenerates figures/
 ```

@@ -42,3 +42,15 @@ An honest record of what I did myself and what I got help with.
 - Still mine: the literature search on this family, checking every reference,
   the "To do myself" items in notes 02 and 04, and being able to explain and
   re-derive every result before showing the paper to anyone.
+
+## 2026-11-16 — Closing the TODOs
+
+- I asked Claude to finish the remaining TODOs. Drafted by Claude: a complete
+  proof that the tables are convex exactly for −1 < ε < 3 (curvature has the
+  sign of 1 − 3εX²Y², then AM–GM), a derivation of the 2-periodic trace
+  formula with mirror matrices (Lemma in Section 4), a first literature search
+  (three related papers added to `refs.bib`; no prior study of this family
+  found), and a check of the reference list. `verify.py` now has 30 checks.
+- Still mine: reading the related papers to confirm the family is new,
+  re-deriving both new proofs, and checking the AI statement against the
+  target journal's policy.
