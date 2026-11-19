@@ -65,3 +65,13 @@ An honest record of what I did myself and what I got help with.
   31 checks.
 - Still mine: everything in `STUDY-GUIDE.md`, and one next step that I do
   myself without AI drafting.
+
+## 2026-11-19 — Toward submission
+
+- Drafted by Claude: a referee-style pass on the paper (bootstrap confidence
+  intervals for both scaling exponents, MSC codes and keywords, a sharper
+  comparison with Bishop et al. 2026 after reading their paper, a data and
+  code availability statement) and `SUBMISSION.md` (AI policies, venues,
+  checklist).
+- Still mine: everything in the `SUBMISSION.md` checklist, starting with a
+  faculty mentor.

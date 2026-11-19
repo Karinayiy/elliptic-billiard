@@ -22,6 +22,8 @@
 \author{Boyan (Karina) Li}
 \address{Department of Mathematics, University of California San Diego}
 \date{\today}
+\subjclass[2020]{Primary 37C83; Secondary 37J40, 37M25, 51N20}
+\keywords{elliptic billiards, caustics, Poncelet porism, integrability, chaos, Lyapunov exponents}
 
 \begin{document}
 
@@ -90,8 +92,10 @@ Ram\'irez-Ros~\cite{DelshamsRamirezRos1996} developed a Poincar\'e--Melnikov
 method for planar maps and used it to prove that non-trivial symmetric entire
 perturbations of the ellipse break integrability: the separatrices through the
 hyperbolic 2-periodic orbit split. Bishop et al.~\cite{Bishop2026} recently
-computed the stable and unstable manifolds of periodic orbits in perturbed
-elliptical tables to high order. Interpolations between round and square
+computed the stable and unstable manifolds of periodic orbits in elliptical
+tables perturbed by low Fourier modes of the parametrization, detecting chaos
+with weighted Birkhoff averages; they do not measure the size of the chaotic
+set as a function of the perturbation. Interpolations between round and square
 shapes have been studied mainly through superellipses (Lam\'e curves); see,
 e.g., the soft-wall squircle billiard of Gonz\'alez-Andrade et
 al.~\cite{GonzalezAndrade2025}. We did not find the family
@@ -563,11 +567,15 @@ regular, and the range of $d_1d_2$ is $7\times10^{-14}$.
   $\varepsilon \ne 0$ we tested has chaotic orbits. For small deformations they
   form a layer around the curves $d_1d_2 = 0$, the orbits through a focus
   (Figure~\ref{fig:deformed-phase}).
-  \item \emph{Linear scaling.} For $|\varepsilon| \le 0.03$ the chaotic fraction
-  is $f \approx 4.8\,|\varepsilon|^{0.98}$, almost the same for both signs of
-  $\varepsilon$ (Figure~\ref{fig:breaking}, right).
+  \item \emph{Linear scaling.} For $|\varepsilon| \le 0.03$ a log--log fit gives
+  $f \approx 4.8\,|\varepsilon|^{0.98}$, with a bootstrap $95\%$ confidence
+  interval $[0.87, 1.14]$ for the exponent (resampling orbits, $1000$
+  replicates). Fixing the exponent at $1$ gives $f \approx 5.0\,|\varepsilon|$,
+  and $f/|\varepsilon|$ lies between $4.7$ and $6.4$ at all eight values tested,
+  for both signs of $\varepsilon$ (Figure~\ref{fig:breaking}, right).
   \item \emph{How fast $d_1d_2$ breaks.} On regular orbits, the median range
   of $d_1d_2$ is $1.8\,|\varepsilon|^{1.00}$ for $|\varepsilon| \le 0.03$
+  (exponent $0.997$, bootstrap $95\%$ interval $[0.987, 0.998]$)
   (Figure~\ref{fig:breaking}, left). So $d_1d_2$ is no longer conserved, but it
   survives as an \emph{approximate} invariant whose error is proportional to
   the deformation. On chaotic orbits the range is 6--10 times larger.
@@ -685,8 +693,11 @@ tested, with a shape-dependent constant.
   chaotic fraction converge to a limit strictly between $0$ and $1$?
 \end{enumerate}
 
-Every number in this paper can be reproduced with the scripts
-\texttt{verify.py}, \texttt{research.py} and \texttt{figures.py}.
+\paragraph{Data and code availability.} Every number and figure in this paper
+can be reproduced with the Python scripts \texttt{verify.py},
+\texttt{research.py}, \texttt{extensions.py} and \texttt{figures.py}, which
+together with the raw results will be made publicly available with the
+published version.
 
 \section*{Acknowledgements and use of AI}
 

@@ -94,7 +94,7 @@ quartic, and since $t = 0$ is still a root, Vieta's step becomes a cubic
 - [x] Simulator and numerical verification
 - [x] Caustic theorem, hyperbola case; signed $d_1d_2 = b^2 - \lambda$
 - [x] Deformed tables: axis-orbit stability theorem and numerical study
-- [x] Full paper: [paper/main.pdf](paper/main.pdf) (11 pages)
+- [x] Full paper: [paper/main.pdf](paper/main.pdf) (12 pages)
 - [x] Literature search (first pass, see note 04); references checked
 - [ ] Read the related papers and confirm the family is new
 - [ ] GeoGebra exploration
@@ -129,4 +129,5 @@ The paper is [paper/main.pdf](paper/main.pdf). To rebuild it after editing
 | `figures.py` | makes every figure in `figures/` |
 | `paper/` | LaTeX paper draft and bibliography |
 | `STUDY-GUIDE.md` | what I must be able to re-derive and explain |
+| `SUBMISSION.md` | venues, AI policy, checklist before submitting |
 | `LOG.md` | work log, including exactly what was drafted with AI help |
